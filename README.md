@@ -1,8 +1,7 @@
 # Chrome Native Messaging in Go
 
-Chrome browser extension with native messaging host written in Go. The focus of this sample extension and
-native messaging host is to create a persistent connection to the native messaging host and exchange JSON
-with the extension app.
+Simple Chrome browser extension with a native messaging host written in Go. The focus of this extension and
+native messaging host is to showcase the creation of a persistent connection using connectNative() to a native messaging host written in Go and exchange JSON formatted messages.
 
 ## Getting Started
 
@@ -28,9 +27,9 @@ command and hit enter:
 go build -o nativeMsgSample.exe
 ```
 
-**Step 2**: Update the `com.sample.native_msg_golang.json` file. Add the full file path of the *nativeMsgSample.exe* file you just created in step 1 to the "path" property value in the JSON file.
+**Step 2**: Update the `/native-host/config/com.sample.native_msg_golang.json` file. Add the full file path of the *nativeMsgSample.exe* file you just created in step 1 to the "path" property value in the JSON file.
 
-Example (change this to match your file path)...
+Example (change this path to match your file path)...
 ```
 {
     ...
@@ -44,7 +43,7 @@ Example (change this to match your file path)...
 HKEY_CURRENT_USER/Software/Google/Chrome/NativeMessagingHosts
 ```
 - 3.1: Add a new key with title of "com.sample.native_msg_golang" under the *NativeMessagingHosts* key.
-- 3.2: After creating the `com.sample.native_msg_golang` key, there should be a "(Default)" string value within the key. Right click on that string value and choose Modify. Then, enter the full path to `/native-host/config/com.sample.native_msg_golang.json`.
+- 3.2: After creating the `com.sample.native_msg_golang` key, there should be a "*(Default)*" string value within the key. Right click on that string value and choose "*Modify*". Then, enter the full path to `/native-host/config/com.sample.native_msg_golang.json`.
 
 **Step 4**: Install the Chrome extension app.
 
@@ -57,7 +56,7 @@ HKEY_CURRENT_USER/Software/Google/Chrome/NativeMessagingHosts
 
 You should see a simple UI containing a button that says "*Connect to Native host*". Click that button to establish a connection to the native messaging host.
 
-Once connected to the native messaging host, a text box and Send button should appear in the UI. You can enter "*ping*" into the text box and hit send. You should see the following...
+Once connected to the native messaging host, a text box and "Send" button should appear in the UI. You can enter "*ping*" into the text box and hit send. This will send a JSON payload containing "*ping*" to the native messaging host. In turn, the host will respond with a JSON payload containing "*pong*".
 
 ## License
 
