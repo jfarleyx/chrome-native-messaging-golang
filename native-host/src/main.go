@@ -93,7 +93,7 @@ func read() {
 			Error.Fatal(err)
 		}
 
-		// message has been read in full, not process it
+		// message has been read in full, now process it
 		parseMessage(content)
 	}
 
