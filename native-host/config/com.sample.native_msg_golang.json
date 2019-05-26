@@ -1,7 +1,7 @@
 {
     "name": "com.sample.native_msg_golang",
-    "description": "Chrome Native Messaging Host Example",
-    "path": "ADD PATH TO THE NATIVE HOST EXE HERE",
+    "description": "Chrome Native Messaging Host Go Example",
+    "path": "C:\\repos\\github\\chrome-native-messaging-golang\\native-host\\src\\bin\\nativeMsgSample.exe",
     "type": "stdio",
     "allowed_origins": [
         "chrome-extension://ghbmnnjooekpmoecnnnilnnbdlolhkhi/"

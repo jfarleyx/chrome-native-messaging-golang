@@ -3,7 +3,7 @@
   "name": "Chrome Native Messaging Go Example",
   "version": "1.0",
   "manifest_version": 2,
-  "description": "Send a message to a native Go application.",
+  "description": "Sends a message to Chrome native messaging application written in Go.",
   "app": {
     "launch": {
       "local_path": "main.html"
