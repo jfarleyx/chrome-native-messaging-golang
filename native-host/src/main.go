@@ -46,7 +46,7 @@ func Init(traceHandle io.Writer, errorHandle io.Writer) {
 	Trace = log.New(traceHandle, "TRACE: ", log.Ldate|log.Ltime|log.Lshortfile)
 	Error = log.New(errorHandle, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
 
-	// determine native byte order
+	// determine native byte order so that we can read message size correctly
 	var one int16 = 1
 	b := (*byte)(unsafe.Pointer(&one))
 	if *b == 0 {
@@ -63,9 +63,9 @@ func main() {
 		Error.Printf("Unable to create and/or open log file. Will log to Stdout and Stderr. Error: %v", err)
 	} else {
 		Init(file, file)
+		// ensure we close the log file when we're done
+		defer file.Close()
 	}
-	// ensure we close the log file when we're done
-	defer file.Close()
 
 	Trace.Printf("Chrome native messaging host started. Native byte order: %v.", nativeEndian)
 	read()
@@ -83,8 +83,7 @@ func read() {
 	lengthNum := int(0)
 
 	// we're going to indefinitely read the first 4 bytes in buffer, which gives us the message length.
-	// the read() being in the for loop helps to ensures we detect when the Stdin is closed.
-	// when stdin is closed, we exit the loop and shut down the native host, because it's not being used.
+	// if stdIn is closed we'll exit the loop and shut down host
 	for b, err := s.Read(lengthBytes); b > 0 && err == nil; b, err = s.Read(lengthBytes) {
 		// convert message length bytes to integer value
 		lengthNum = readMessageLength(lengthBytes)
@@ -107,7 +106,7 @@ func read() {
 		parseMessage(content)
 	}
 
-	Trace.Print("Stdin pipe closed.")
+	Trace.Print("Stdin closed.")
 }
 
 // readMessageLength reads and returns the message length value in native byte order.
@@ -121,7 +120,7 @@ func readMessageLength(msg []byte) int {
 	return int(length)
 }
 
-// parseMessage parses incoming message and routes to appropriate process handlers.
+// parseMessage parses incoming message
 func parseMessage(msg []byte) {
 	iMsg := decodeMessage(msg)
 	Trace.Printf("Message received: %s", msg)
@@ -181,7 +180,7 @@ func dataToBytes(msg OutgoingMessage) []byte {
 
 // writeMessageLength determines length of message and writes it to os.Stdout.
 func writeMessageLength(msg []byte) {
-	err := binary.Write(os.Stdout, binary.LittleEndian, uint32(len(msg)))
+	err := binary.Write(os.Stdout, nativeEndian, uint32(len(msg)))
 	if err != nil {
 		Error.Printf("Unable to write message length to Stdout: %v", err)
 	}
